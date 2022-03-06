@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import "./Card.css";
+import styles from "./Card.module.css";
 
 const Card: FC<{
   children: React.ReactNode;
   className?: string;
-}> = (props) => {
-  const classes = "card " + props.className;
-  return <div className={classes}>{props.children}</div>;
+}> = ({ className, children }) => {
+  const classes = `${styles.card} ${className}`;
+  return <div className={classes}>{children}</div>;
 };
 
 export default Card;

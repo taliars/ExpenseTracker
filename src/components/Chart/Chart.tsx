@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DataPoint from "../../model/DataPoint";
 import ChartBar from "./ChartBar";
-import './Chart.css';
+import styles from './Chart.module.css';
 
 type Props = FC<{ dataPoints: DataPoint[] }>;
 
@@ -10,7 +10,7 @@ const Chart: Props = ({ dataPoints }) => {
   const totalMax = Math.max(...dataPointValues);
 
   return (
-    <div className="chart">
+    <div className={styles.chart}>
       {dataPoints.map((dataPoint) => (
         <ChartBar
           key={dataPoint.label}

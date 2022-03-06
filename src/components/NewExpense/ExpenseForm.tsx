@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import ExpenseData from "../../model/ExpenseData";
-import "./ExpenseForm.css";
+import styles from "./ExpenseForm.module.css";
 
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 type SubmitEvent = React.FormEvent<HTMLFormElement>;
@@ -45,8 +45,8 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
 
   return (
     <form onSubmit={submitHandler}>
-      <div className="new-expense__controls">
-        <div className="new-expense__control">
+      <div className={styles.new_expense__controls}>
+        <div className={styles.new_expense__control}>
           <label>Title</label>
           <input
             type="text"
@@ -54,7 +54,7 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
             onChange={titleChangeHanlder}
           />
         </div>
-        <div className="new-expense__control">
+        <div className={styles.new_expense__control}>
           <label>Amount</label>
           <input
             type="number"
@@ -64,7 +64,7 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
             onChange={amountChangeHandler}
           />
         </div>
-        <div className="new-expense__control">
+        <div className={styles.new_expense__control}>
           <label>Date</label>
           <input
             type="date"
@@ -75,7 +75,7 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
           />
         </div>
       </div>
-      <div className="new-expense__actions">
+      <div className={styles.new_expense__actions}>
         <button type="button" onClick={onCancel}>Cancel</button>
         <button type="submit">Add expense</button>
       </div>

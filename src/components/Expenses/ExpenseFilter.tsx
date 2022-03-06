@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import "./ExpenseFilter.css";
+import styles from "./ExpenseFilter.module.css";
 
 type ChangeEvent = React.FormEvent<HTMLSelectElement>;
 type Props = FC<{ onFilterChange: (year: string) => void, selectedYear: string }>;
@@ -9,8 +9,8 @@ const ExpensesFilter: Props = ({ onFilterChange, selectedYear }) => {
     onFilterChange(event.currentTarget.value);
 
   return (
-    <div className="expenses-filter">
-      <div className="expenses-filter__control">
+    <div className={styles.expenses_filter}>
+      <div className={styles.expenses_filter__control}>
         <label>Filter by year</label>
         <select value={selectedYear} onChange={filterChangeHandler}>
           <option value="2022">2022</option>

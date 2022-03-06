@@ -3,9 +3,9 @@ import React, { FC, useState } from "react";
 import Card from "../UI/Card";
 import ExpensesFilter from "./ExpenseFilter";
 import ExpensesList from "./ExpensesList";
-import "./Expenses.css";
 import ExpenseData from "../../model/ExpenseData";
 import ExpensesChart from "./ExpensesChart";
+import styles from "./Expenses.module.css";
 
 type Props = FC<{ expenses: ExpenseData[] }>;
 
@@ -22,7 +22,7 @@ const Expenses: Props = ({ expenses }) => {
 
   return (
     <div>
-      <Card className="expenses">
+      <Card className={styles.expenses}>
         <ExpensesFilter
           onFilterChange={filterChangeHandler}
           selectedYear={selectedYear}
