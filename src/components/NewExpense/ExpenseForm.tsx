@@ -1,46 +1,40 @@
-import React, { FC, useState } from "react";
+import React, { FC, useRef, FormEvent, RefObject } from "react";
 import ExpenseData from "../../model/ExpenseData";
 import styles from "./ExpenseForm.module.css";
 
-type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
-type SubmitEvent = React.FormEvent<HTMLFormElement>;
 type Props = FC<{
   onSaveExpense: (enteredExpense: ExpenseData) => void;
   onCancel: () => void;
 }>;
 
-const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
-  const [enteredTitle, setEnteredTitle] = useState("");
-  const [enteredAmount, setEnteredAmount] = useState("");
-  const [enteredDate, setEnteredDate] = useState("");
+const ExpenseForm: Props = ({ onSaveExpense, onCancel }) => {
+  const enteredTitleRef = useRef<HTMLInputElement>(null);
+  const enteredAmountRef = useRef<HTMLInputElement>(null);
+  const enteredDateRef = useRef<HTMLInputElement>(null);
 
-  const titleChangeHanlder = (event: ChangeEvent) => {
-    setEnteredTitle(event.target.value);
-  };
-
-  const amountChangeHandler = (event: ChangeEvent) => {
-    setEnteredAmount(event.target.value);
-  };
-
-  const dateChangeHandler = (event: ChangeEvent) => {
-    setEnteredDate(event.target.value);
-  };
-
-  const submitHandler = (event: SubmitEvent) => {
+  const submitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const getValue = (ref: RefObject<HTMLInputElement>) =>
+      ref.current?.value.trim() ?? "";
+
+    const title = getValue(enteredTitleRef);
+    const amount = getValue(enteredAmountRef);
+    const data = getValue(enteredDateRef);
+
+    if ([title, amount, data].some((x) => x.length === 0)) {
+      console.error("Invalid input data");
+      return;
+    }
 
     const expenseData = {
       id: Math.random().toString(),
-      title: enteredTitle,
-      amount: parseFloat(enteredAmount),
-      date: new Date(enteredDate),
+      title: title,
+      amount: parseFloat(amount),
+      date: new Date(data),
     };
 
     onSaveExpense(expenseData);
-
-    setEnteredTitle("");
-    setEnteredAmount("");
-    setEnteredDate("");
   };
 
   return (
@@ -48,21 +42,11 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
       <div className={styles.new_expense__controls}>
         <div className={styles.new_expense__control}>
           <label>Title</label>
-          <input
-            type="text"
-            value={enteredTitle}
-            onChange={titleChangeHanlder}
-          />
+          <input type="text" ref={enteredTitleRef} />
         </div>
         <div className={styles.new_expense__control}>
           <label>Amount</label>
-          <input
-            type="number"
-            min="0.01"
-            step="0.01"
-            value={enteredAmount}
-            onChange={amountChangeHandler}
-          />
+          <input type="number" min="0.01" step="0.01" ref={enteredAmountRef} />
         </div>
         <div className={styles.new_expense__control}>
           <label>Date</label>
@@ -70,13 +54,14 @@ const ExpenseForm: Props = ({onSaveExpense, onCancel}) => {
             type="date"
             min="2019-01-01"
             max="2025-12-31"
-            value={enteredDate}
-            onChange={dateChangeHandler}
+            ref={enteredDateRef}
           />
         </div>
       </div>
       <div className={styles.new_expense__actions}>
-        <button type="button" onClick={onCancel}>Cancel</button>
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
         <button type="submit">Add expense</button>
       </div>
     </form>
