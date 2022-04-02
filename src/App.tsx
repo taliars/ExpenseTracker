@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ErrorCard from "./components/UI/ErrorCard";
 import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
@@ -7,32 +7,38 @@ import ExpenseData from "./model/ExpenseData";
 import LoadingCard from "./components/UI/LoadingCard";
 
 const baseURL =
-  "https://expensetracker-e36c2-default-rtdb.firebaseio.com/expenses.jso";
+  "https://expensetracker-e36c2-default-rtdb.firebaseio.com/expenses.json";
+
+const getExpenses = async () => {
+  const response = await axios.get<ExpenseData[]>(baseURL);
+
+  if (response.data) {
+    return Object.values(response.data).map((x) => ({
+      ...x,
+      date: new Date(x.date),
+    }));
+  }
+
+  return [];
+};
 
 const App = () => {
   const [expenses, setExpenses] = useState<ExpenseData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
 
-  const getExpensesHandler = async () => {
+  const getExpensesHandler = useCallback(async () => {
     try {
-      const response = await axios.get<ExpenseData[]>(baseURL);
-      if (response.data) {
-        const expenses = Object.values(response.data).map((x) => ({
-          ...x,
-          date: new Date(x.date),
-        }));
-        setExpenses(expenses);
-      }
+      const fetchedExpenses = await getExpenses();
+      setExpenses(fetchedExpenses);
     } catch (error) {
       if (error instanceof Error) {
-        //alert(error.message);
         setLoadingError(true);
       }
-    } finally{
+    } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const addExpenseHanlder = async (newExpense: ExpenseData) => {
     setExpenses([newExpense, ...expenses]);
@@ -41,10 +47,10 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => getExpensesHandler(), 2000);
-  }, []);
+  }, [getExpensesHandler]);
 
-  if(isLoading){
-    return <LoadingCard>Loading...</LoadingCard>
+  if (isLoading) {
+    return <LoadingCard>Loading...</LoadingCard>;
   }
 
   return (
